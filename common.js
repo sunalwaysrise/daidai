@@ -13,13 +13,6 @@ var l={
 			if(argName==argname){return value;}
 		}
 	},
-	checkEmail:function(val,obj){
-		var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-		if(!myreg.test(val)){
-			//obj.addClass("error").val("data error!").focus();
-			return false;
-		}
-	},
 	setPosition:function(_obj){
 		var t = document.documentElement.scrollTop || document.body.scrollTop;
 		var viewHeight = $(window).height(), viewWidth = $(window).width(), _objHeight = _obj.height(), _objWidth = _obj.width();
@@ -39,7 +32,7 @@ var l={
     		if(t_curr - t_start >= mustRunDelay){
     			fn.apply(context, args);
     			t_start = t_curr;
-    		} else {
+    		}else {
     			timer = setTimeout(function(){
     				fn.apply(context, args);
     			}, delay);
@@ -435,3 +428,45 @@ l.dialog={
 };
 //l.dialog.alert({title:"title",content:"content",lock:"lock",btn:"OK"});
 //l.dialog.confirm({title:"title",content:"content",lock:"lock",btn1:"OK",btn2:"CANCEL"});
+$.extend(String.prototype,{
+	empty:function(){
+		return this ==null || this=="" || this.length==0;
+	},
+	encode:function(){
+		return encodeURIComponent(this);
+	},
+	decode:function(){
+		return decodeURIComponent(this);
+	},
+	trim:function(){
+		return this.replace(/(^\s*)|(\s*$)/g, "");
+	},
+	replaceAll:function(rgExp, replaceText){
+        var tmpStr = this;
+        while (tmpStr.indexOf(rgExp) != -1){
+        	tmpStr = tmpStr.replace(rgExp, replaceText);
+        }
+        return tmpStr;
+    },
+	repChinese: function(){
+        var _tmp = this;
+        $(['０', '１', '２', '３', '４', '５', '６', '７', '８', '９']).each(function(i, v) {
+            _tmp = _tmp.replaceAll(v, i);
+        });
+        return _tmp;
+    },
+    isEmail:function(){
+    	var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		return myreg.test(this);
+    },
+    isNumber:function(){
+    	return /^[0-9]+$/.test(this);
+    },
+    hasChinese: function() {
+        return escape(this).indexOf("%u") != -1;
+    },
+    isIDCard: function() {
+        return /^(\d{15}|\d{18}|\d{17}(X|x))$/.test(this);
+    }
+});
+

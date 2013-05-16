@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript" src="common.js"></script>
+</head>
+<body>
+<input id="test" type="text" />
+<script type="text/javascript">
+	$(function(){
+		$("#test").blur(function(){
+			var test=$(this).val();
+			var test2=test.trim()
+			console.log(test.length);
+			console.log(test2.length);
+			var test3=test.empty();
+			console.log(test.hasChinese());
+			//console.log(test.isEmail());
+		})
+	})
+</script>
+<script type="text/javascript">
+var test={
+	calcUnitsRepeatHhtz:function(){
+      var pass=this.passWay, tu=0;
+      //把scheme拆分成子scheme,即每一种下面只包含一种玩法。
+      var singleMatchs = this.getSingleMatchs();
+      //以串关为主导，把scheme折成去重复，去单一玩法的票，计算出注数tu.
+      for(var i=0;i<pass.length;i++){
+          var multiArr = [];
+          for(var j=0; j<singleMatchs.length; j++){
+              var t=[],d=[],len=pass[i]=='单关'?1:Number(pass[i].substring(0,pass[i].indexOf('串')));
+              for(var k=0; k<singleMatchs[j].length; k++){
+                  o = singleMatchs[j][k];
+                  (o.dan?d:t).push(o);
+              }
+              //把所选的比赛组成票形式，即每一个bet的比赛包含其中一个玩法的多个投注项
+              var bet=this.apartDraw(d,t,len);
+
+              //把每种子串关下的scheme生成的串关组合，放到一起去，待待去重，去单一玩法。
+              for(var m=0;m<bet.length;m++){
+                  multiArr.push(bet[m]);
+              }
+          }
+
+          //去重，去单一玩法
+          var betFinal = this.removeDuplicateBetAndOnePlayType(multiArr);
+          //计算每个票的注数
+          $(betFinal).each(function(j,v){tu+=this._calcUnitsRepeat(v,pass[i]);}.bind(this));
+      }
+        return tu;
+    },
+    getSingleMatchs:function(){
+        var singleSchemes=[];
+        var scheme={};                       // 某一场比赛的某一种玩法的scheme
+        var totalOneMatchSchemes=[];             //拆成单独玩法的scheme以比赛为元素放入此中。
+
+        //循环所有的schemes ，把每一场比赛以玩法，拆分成一同的schemes，放入totalOneMatchSchemes中。
+        for(k in this.schemes){
+            var sf=new Array(),rfsf=new Array(),dxf=new Array(),sfc=new Array();
+            var oneMatchSchemes=[];    //存放同一场比赛的不同玩法的子scheme
+
+            var choose = this.schemes[k].v;
+            for(var i=0;i<choose.length;i++){
+                if(Number(choose[i])<100)
+                    sf.push(Number(choose[i]));
+                else if(Number(choose[i])>=100 && Number(choose[i])<200)
+                    rfsf.push(Number(choose[i]));
+                else if(Number(choose[i])>=200 && Number(choose[i])<300)
+                    dxf.push(Number(choose[i]));
+                else if(Number(choose[i])>=300 && Number(choose[i])<400)
+                    sfc.push(Number(choose[i]));
+            }
+
+            if(sf.length>0){
+                scheme={
+                    no   : this.schemes[k].no,
+                    name : this.schemes[k].name,
+                    h    : this.schemes[k].h,
+                    g    : this.schemes[k].g,
+                    v    : sf,
+                    t    : this.schemes[k].t,
+                    r    : this.schemes[k].rq,
+                    b    : this.schemes[k].b,
+                    o    : this.schemes[k].o,
+                    dan:this.schemes[k].dan
+                };
+                oneMatchSchemes.push(scheme);
+            }
+            if(rfsf.length>0){
+                scheme={
+                    no   : this.schemes[k].no,
+                    name : this.schemes[k].name,
+                    h    : this.schemes[k].h,
+                    g    : this.schemes[k].g,
+                    v    : rfsf,
+                    t    : this.schemes[k].t,
+                    r    : this.schemes[k].rq,
+                    b    : this.schemes[k].b,
+                    o    : this.schemes[k].o,
+                    dan:this.schemes[k].dan
+                };
+                oneMatchSchemes.push(scheme);
+            }
+            if(dxf.length>0){
+                scheme={
+                    no   : this.schemes[k].no,
+                    name : this.schemes[k].name,
+                    h    : this.schemes[k].h,
+                    g    : this.schemes[k].g,
+                    v    : dxf,
+                    t    : this.schemes[k].t,
+                    r    : this.schemes[k].rq,
+                    b    : this.schemes[k].b,
+                    o    : this.schemes[k].o,
+                    dan:this.schemes[k].dan
+                };
+                oneMatchSchemes.push(scheme);
+            }
+            if(sfc.length>0){
+                scheme={
+                    no   : this.schemes[k].no,
+                    name : this.schemes[k].name,
+                    h    : this.schemes[k].h,
+                    g    : this.schemes[k].g,
+                    v    : sfc,
+                    t    : this.schemes[k].t,
+                    r    : this.schemes[k].rq,
+                    b    : this.schemes[k].b,
+                    o    : this.schemes[k].o,
+                    dan:this.schemes[k].dan
+                };
+                oneMatchSchemes.push(scheme);
+            }
+            totalOneMatchSchemes.push(oneMatchSchemes);
+        }
+        //把totalOneMatchSchemes,转化成多个原先单一玩法的schemes结构，此时每一个结构体中包含一所选场次的一种玩法。
+        var tmp = new Array();
+        this.convertMultiPlayTypeToOneType(0,totalOneMatchSchemes,singleSchemes,tmp);
+        return singleSchemes;
+    },
+    convertMultiPlayTypeToOneType : function(i,arrMulti,arrSingle,arrTmp){
+        for(var j=0;j<arrMulti[i].length;j++){
+            var  tt=new Array();
+            for(var k=0; k<arrTmp.length; k++){
+                tt.push(arrTmp[k]);
+            }
+            if(i+1<arrMulti.length){
+                tt.push(arrMulti[i][j]);
+                this.convertMultiPlayTypeToOneType(i+1,arrMulti,arrSingle,tt);
+            }else {
+                var bb=new Array();
+                for(var m=0; m<arrTmp.length; m++){
+                    bb.push(tt[m]);
+                }
+                bb.push(arrMulti[i][j]);
+                arrSingle.push(bb);
+            }
+        }
+    },
+    removeDuplicateBetAndOnePlayType : function(bet){
+        var betFinal=[];
+        var tmp=[];
+        for(var i=0; i<bet.length; i++){
+            var sum = [];
+            var Str ="";
+            var isMultiPlayType = false;
+            for(var j=0; j<bet[i].length; j++){
+                var no = bet[i][j].no.substr(1);
+                var v= bet[i][j].v;
+                if(Number(v[0])<100){
+                    if(!this.contains(sum,"sf")){
+                        sum.push("sf");
+                    }
+                }else if(Number(v[0])>=100 && Number(v[0])<200){
+                    if(!this.contains(sum,"rfsf")){
+                        sum.push("rfsf");
+                    }
+                }else if(Number(v[0])>=200 && Number(v[0])<300){
+                    if(!this.contains(sum,"dxf")){
+                        sum.push("dxf");
+                    }
+                }else if(Number(v[0])>=300 && Number(v[0])<400){
+                    if(!this.contains(sum,"sfc")){
+                        sum.push("sfc");
+                    }
+                }
+                if(Str.length > 0){
+                    Str=Str +"$";
+                }
+                Str = Str+no;
+                for(var k=0; k< v.length; k++){
+                    Str = Str +",";
+                    Str = Str + v[k];
+                }
+            }
+            if(sum.length>1){
+                isMultiPlayType = true;
+            }
+
+            //非单一玩法的准备去重
+            if(isMultiPlayType){
+                if(!this.contains(tmp,Str)){
+                    tmp.push(Str);
+                    betFinal.push(bet[i]);
+                }
+            }
+        }
+        return betFinal;
+    },
+    contains : function(arr,str){
+        for(var i=0; i<arr.length; i++){
+            if(arr[i]==str){
+                return true;
+            }
+        }
+        return false;
+    }
+}
+</script>
+</body>
+</html>
