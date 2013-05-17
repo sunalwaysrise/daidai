@@ -162,33 +162,38 @@ var l={
 			system : system
 		};
 	},
-    location:function(){
+    location:function(event){
         if (navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(l.getPositionSuccess,l.getPositionError);
+            navigator.geolocation.getCurrentPosition(function(position){
+            	var lat = position.coords.latitude;
+            	var lon = position.coords.longitude;
+            	$.ajax('http://gc.ditu.aliyun.com/regeocoding',{
+            		dataType:'jsonp',
+            		anysc:false,
+            		jsonp:'b',
+            		data:{l:lat+','+lon,type:'010'},
+            		success:function(data){
+            		    if(data&&data.addrList&&data.addrList[0].status===1){
+            		    	var admName=data.addrList[0].admName,sheng,shi=data.addrList[0].name;
+            			    admName=admName.split(",");
+            			    sheng=admName[0];
+            			    shi=admName[1];
+            			    if(typeof(event)=="function"){
+            				    event({statu:"success",sheng:sheng,shi:shi});
+            			    }
+            		    }
+            	    }
+            	})
+            },function(error){
+            	if(typeof(event)=="function"){
+            		event({statu:"fail",error:'无法获得位置'});
+            	}
+            });
         }else{
-            $("#location").html("浏览器不支持定位");
-        }
-    },
-    getPositionSuccess:function(position){
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        $.ajax('http://gc.ditu.aliyun.com/regeocoding',{
-            dataType:'jsonp',
-            jsonp:'b',
-            data:{l:lat+','+lon,type:'010'}
-        })
-        .done(function(data){
-            if(data&&data.addrList&&data.addrList[0].status===1){
-                var admName=data.addrList[0].admName,sheng,shi=data.addrList[0].name;
-                admName=admName.split(",");
-                sheng=admName[0];
-                shi=admName[1];
-                $("#location").html(sheng+","+shi);
+            if(typeof(event)=="function"){
+            	event({statu:"fail",error:'不支持定位'});
             }
-        });
-    },
-    getPositionError:function(error){
-        $("#location").html("没有获取到位置");
+        }
     }
 }
 l.ajax={
