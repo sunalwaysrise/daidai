@@ -286,9 +286,9 @@ l.jsonPage={
 		this._content=$(content);
 		this.setPage();
 		if(this._perPageLength>=this._length){
-			this.setContent(0,this._perPageLength);
-		}else{
 			this.setContent(0,this._length);
+		}else{
+			this.setContent(0,this._perPageLength);
 		}
 	},
     setPage:function(){
@@ -296,19 +296,22 @@ l.jsonPage={
     	if(this._length>=this._perPageLength){
     		var max=Math.ceil(this._length / this._perPageLength),tmp=[],next;
     		max>2 ? next=this._perPageLength*2 : next=this._length;
-    		tmp.push("<a data_beginRow='"+ 0 +"' data_endRow='"+ this._perPageLength +"'></a>");
+    		//tmp.push("<a data_beginRow='"+ 0 +"' data_endRow='"+ this._perPageLength +"'></a>");
     		for(var i=0;i<max;i++){
     			var beginRow = i * this._perPageLength,endRow = beginRow + this._perPageLength;
 				if (endRow > length) {endRow = length;}
-    			tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "'>"+(i+1)+"</a>");
+    			if(i==0){
+					tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "' class='NavOn'>"+(i+1)+"</a>");
+				}else{
+					tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "'>"+(i+1)+"</a>");
+				}
     		}
-    		tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
+    		//tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
     		tmp.join("");
     		this._nav.html(tmp);
     	}else{
-    		this._nav.html("<a>1</a>");
+    		this._nav.html("<a class='NavOn'>1</a>");
     	}
-    	this.selected();
     },
     setContent:function(beginRow,endRow){
     	if(!this._data){return}
