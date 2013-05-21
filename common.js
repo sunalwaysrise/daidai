@@ -216,16 +216,18 @@ var l={
 				return;
 			}
 			var tmpCookie=name+"="+encodeURI(value);
-			if(expires!=null){
-				tmpCookie+=";expires="+expires.toGMTString();
+			if(expires){
+				var exp = new Date();
+				exp.setTime(exp.getTime() + expires*24*60*60*1000);
+				tmpCookie+=";expires="+exp.toGMTString();
 			}
-			if(path!=null){
+			if(path){
 				tmpCookie+=";path="+path;
 			}
-			if(domain!=null){
+			if(domain){
 				tmpCookie+=";domain="+domain;
 			}
-			if(secure!=null){
+			if(secure){
 				tmpCookie+=";secure="+secure;
 			}
 			document.cookie=tmpCookie;
