@@ -197,58 +197,37 @@ var l={
 	},
 	cookie:{
 		get : function(name){
-			if(document.cookie==null){
-				return;
-			}
+			if(document.cookie==null){return;}
 			var tmpDate=document.cookie,tmpStart=tmpDate.indexOf(name+"=");
-			if(tmpStart==-1){
-				return null;
-			}
+			if(tmpStart==-1){return null;}
 			tmpStart+=name.length+1;
 			var tmpEnd=tmpDate.indexOf(";",tmpStart);
-			if(tmpEnd==-1){
-				return decodeURI(tmpDate.substring(tmpStart))
-			};
+			if(tmpEnd==-1){return decodeURI(tmpDate.substring(tmpStart))};
 			return decodeURI(tmpDate.substring(tmpStart,tmpEnd));
 		},
 		set : function(name,value,expires,path,domain,secure){
-			if(document.cookie==null){
-				return;
-			}
+			if(document.cookie==null){return;}
 			var tmpCookie=name+"="+encodeURI(value);
 			if(expires){
 				var exp = new Date();
 				exp.setTime(exp.getTime() + expires*24*60*60*1000);
 				tmpCookie+=";expires="+exp.toGMTString();
 			}
-			if(path){
-				tmpCookie+=";path="+path;
-			}
-			if(domain){
-				tmpCookie+=";domain="+domain;
-			}
-			if(secure){
-				tmpCookie+=";secure="+secure;
-			}
+			if(path){tmpCookie+=";path="+path;}
+			if(domain){tmpCookie+=";domain="+domain;}
+			if(secure){tmpCookie+=";secure="+secure;}
 			document.cookie=tmpCookie;
 		},
 		remove : function(name,path,domain){
-			if(document.cookie==null){
-				return;
-			}
+			if(document.cookie==null){return;}
 			var tmpCookie=name+"=null;expires="+new Date(new Date().getTime()-1000000000000).toGMTString();
-			if(path!=null){
-				tmpCookie+=";path="+path;
-			}
-			if(domain!=null){
-				tmpCookie+=";domain="+domain;
-			}
+			if(path!=null){tmpCookie+=";path="+path;}
+			if(domain!=null){tmpCookie+=";domain="+domain;}
 			document.cookie=tmpCookie;
 		},
 		clear : function(path,domain){
-			if(document.cookie==null){
-				return;
-			}var tmpCookie=document.cookie.split(";"),tmpName;
+			if(document.cookie==null){return;}
+			var tmpCookie=document.cookie.split(";"),tmpName;
 			for(var i=0;i<tmpCookie.length;i++){
 				tmpName=tmpCookie[i].split("=")[0].strip();
 				Cookie.remove(tmpName,path,domain);
@@ -406,10 +385,10 @@ l.dialog={
 		    $("body").append('<div id="lDialogBox"><div class="lDialogBoxTitle"><div id="lDialogBoxTitle"></div><div id="lDialogClose"></div></div><div id="lDialogBoxContent"></div><div id="lDialogBoxBtn"></div></div>');
 	    }
 		$("#lDialogBox").css({
-			"position":"absolute",
-			"zIndex":"1000",
-			"width":"",
-			"height":""
+			"position=absolute",
+			"zIndex=1000",
+			"width=",
+			"height="
 		}).show();
 		l.setPosition($("#lDialogBox"));
 	},
@@ -484,13 +463,13 @@ l.dialog={
 		$("#lDialogLock").css({
 			"width":lockWidth,
 			"height":lockHeight,
-			"position":"absolute",
-			"zIndex":"999",
+			"position=absolute",
+			"zIndex=999",
 			"top":0,
 			"left":0,
-			"background":"#ddd",
-			"opacity":"0.8",
-			"filter":"Alpha(opacity=30)"
+			"background=#ddd",
+			"opacity=0.8",
+			"filter=Alpha(opacity=30)"
 		}).fadeIn();
 	}
 };
