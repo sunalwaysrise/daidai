@@ -162,39 +162,97 @@ var l={
 			system : system
 		};
 	},
-    getLocation:function(event){
-        if (navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(function(position){
-            	var lat = position.coords.latitude;
-            	var lon = position.coords.longitude;
-            	$.ajax('http://gc.ditu.aliyun.com/regeocoding',{
-            		dataType:'jsonp',
-            		anysc:false,
-            		jsonp:'b',
-            		data:{l:lat+','+lon,type:'010'},
-            		success:function(data){
-            		    if(data&&data.addrList&&data.addrList[0].status===1){
-            		    	var admName=data.addrList[0].admName,sheng,shi=data.addrList[0].name;
-            			    admName=admName.split(",");
-            			    sheng=admName[0];
-            			    shi=admName[1];
-            			    if(typeof(event)=="function"){
-            				    event({statu:"success",sheng:sheng,shi:shi});
-            			    }
-            		    }
-            	    }
-            	})
-            },function(error){
-            	if(typeof(event)=="function"){
-            		event({statu:"fail",error:'无法获得位置'});
-            	}
-            });
-        }else{
-            if(typeof(event)=="function"){
-            	event({statu:"fail",error:'不支持定位'});
-            }
-        }
-    }
+	getLocation:function(event){
+		if (navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function(position){
+				var lat = position.coords.latitude;
+				var lon = position.coords.longitude;
+				$.ajax('http://gc.ditu.aliyun.com/regeocoding',{
+					dataType:'jsonp',
+					anysc:false,
+					jsonp:'b',
+					data:{l:lat+','+lon,type:'010'},
+					success:function(data){
+						if(data&&data.addrList&&data.addrList[0].status===1){
+							var admName=data.addrList[0].admName,sheng,shi=data.addrList[0].name;
+							admName=admName.split(",");
+							sheng=admName[0];
+							shi=admName[1];
+							if(typeof(event)=="function"){
+								event({statu:"success",sheng:sheng,shi:shi});
+							}
+						}
+					}
+				})
+			},function(error){
+				if(typeof(event)=="function"){
+					event({statu:"fail",error:'无法获得位置'});
+				}
+			});
+		}else{
+			if(typeof(event)=="function"){
+				event({statu:"fail",error:'不支持定位'});
+			}
+		}
+	},
+	cookie:{
+		get : function(name){
+			if(document.cookie==null){
+				return;
+			}
+			var tmpDate=document.cookie,tmpStart=tmpDate.indexOf(name+"=");
+			if(tmpStart==-1){
+				return null;
+			}
+			tmpStart+=name.length+1;
+			var tmpEnd=tmpDate.indexOf(";",tmpStart);
+			if(tmpEnd==-1){
+				return decodeURI(tmpDate.substring(tmpStart))
+			};
+			return decodeURI(tmpDate.substring(tmpStart,tmpEnd));
+		},
+		set : function(name,value,expires,path,domain,secure){
+			if(document.cookie==null){
+				return;
+			}
+			var tmpCookie=name+"="+encodeURI(value);
+			if(expires!=null){
+				tmpCookie+=";expires="+expires.toGMTString();
+			}
+			if(path!=null){
+				tmpCookie+=";path="+path;
+			}
+			if(domain!=null){
+				tmpCookie+=";domain="+domain;
+			}
+			if(secure!=null){
+				tmpCookie+=";secure="+secure;
+			}
+			document.cookie=tmpCookie;
+		},
+		remove : function(name,path,domain){
+			if(document.cookie==null){
+				return;
+			}
+			var tmpCookie=name+"=null;expires="+new Date(new Date().getTime()-1000000000000).toGMTString();
+			if(path!=null){
+				tmpCookie+=";path="+path;
+			}
+			if(domain!=null){
+				tmpCookie+=";domain="+domain;
+			}
+			document.cookie=tmpCookie;
+		},
+		clear : function(path,domain){
+			if(document.cookie==null){
+				return;
+			}var tmpCookie=document.cookie.split(";"),tmpName;
+			for(var i=0;i<tmpCookie.length;i++){
+				tmpName=tmpCookie[i].split("=")[0].strip();
+				Cookie.remove(tmpName,path,domain);
+			}
+		}
+	}
 }
 l.ajax={
 	basic:function(config){
@@ -438,10 +496,10 @@ l.dialog={
 String.prototype.empty=function(){
 	return this ==null || this=="" || this.length==0;
 }
-String.prototype.encode=function(){
+String.prototype.encode:function(){
 	return encodeURIComponent(this);
 }
-String.prototype.decode=function(){
+String.prototype.decode:function(){
 	return decodeURIComponent(this);
 }
 String.prototype.trim=function(){
