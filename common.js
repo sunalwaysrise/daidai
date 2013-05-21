@@ -463,13 +463,13 @@ l.dialog={
 		$("#lDialogLock").css({
 			"width":lockWidth,
 			"height":lockHeight,
-			"position=absolute",
-			"zIndex=999",
+			"position":"absolute",
+			"zIndex":"999",
 			"top":0,
 			"left":0,
-			"background=#ddd",
-			"opacity=0.8",
-			"filter=Alpha(opacity=30)"
+			"background":"#ddd",
+			"opacity":"0.8",
+			"filter":"Alpha(opacity=30)"
 		}).fadeIn();
 	}
 };
