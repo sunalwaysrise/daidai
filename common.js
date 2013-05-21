@@ -20,42 +20,42 @@ var l={
 		var dialogLeft = (viewWidth / 2) - (_objWidth / 2);
 		_obj.css({top : dialogTop,left : dialogLeft});
 	},
-    throttle:function(fn, delay, mustRunDelay){
-    	var timer = null;
-    	var t_start;
-    	return function(){
-    		var context = this, args = arguments, t_curr = +new Date();
-    		clearTimeout(timer);
-    		if(!t_start){
-    			t_start = t_curr;
-    		}
-    		if(t_curr - t_start >= mustRunDelay){
-    			fn.apply(context, args);
-    			t_start = t_curr;
-    		}else {
-    			timer = setTimeout(function(){
-    				fn.apply(context, args);
-    			}, delay);
-    		}
-    	}
-    },
-    tabs:function(config){
-    	var lTabNav=config.nav,lContent=config.content,lActive=config.active;
-    	var T=$("#"+lTabNav),C=$("#"+lContent);
-    	T.children("li").eq(0).addClass();
-    	C.children("li").eq(0).show();
-    	T.children("li").click(function(){
-    		var _this=$(this),_index=_this.index();
-    		T.children("li").removeClass(lActive);
-    		_this.addClass(lActive);
-    		C.children("li").hide();
-    		C.children("li").eq(_index).show();
-    	})
-    },
-    ajax:{},
-    jsonPage:{},
-    dialog:{},
-    client:function(){
+	throttle:function(fn, delay, mustRunDelay){
+		var timer = null;
+		var t_start;
+		return function(){
+			var context = this, args = arguments, t_curr = +new Date();
+			clearTimeout(timer);
+			if(!t_start){
+				t_start = t_curr;
+			}
+			if(t_curr - t_start >= mustRunDelay){
+				fn.apply(context, args);
+				t_start = t_curr;
+			}else {
+				timer = setTimeout(function(){
+					fn.apply(context, args);
+				}, delay);
+			}
+		}
+	},
+	tabs:function(config){
+		var lTabNav=config.nav,lContent=config.content,lActive=config.active;
+		var T=$("#"+lTabNav),C=$("#"+lContent);
+		T.children("li").eq(0).addClass();
+		C.children("li").eq(0).show();
+		T.children("li").click(function(){
+			var _this=$(this),_index=_this.index();
+			T.children("li").removeClass(lActive);
+			_this.addClass(lActive);
+			C.children("li").hide();
+			C.children("li").eq(_index).show();
+		})
+	},
+	ajax:{},
+	jsonPage:{},
+	dialog:{},
+	client:function(){
 		var engine = {ie : 0,gecko : 0,webkit : 0,khtml : 0,opera : 0,ver : null},
 		browser = {ie : 0,firefox : 0,safari : 0,konq : 0,opera : 0,chrome : 0,ver : null},
 		system = {win : false,mac : false,x11 : false,iphone : false,ipod : false,ipad : false,ios : false,android : false,nokiaN : false,winMobile : false,wii : false,ps : false};
@@ -255,12 +255,12 @@ l.ajax={
 		}
 		method=method.toUpperCase();
 		if(method!="GET"){
-		    xhr.open("POST",url,anysc);
-		    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		    xhr.send(tmpdata);
+			xhr.open("POST",url,anysc);
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			xhr.send(tmpdata);
 		}else{
-		    xhr.open("GET",url+"?"+tmpdata+"&noCache="+new Date().getTime(),anysc);
-		    xhr.send();
+			xhr.open("GET",url+"?"+tmpdata+"&noCache="+new Date().getTime(),anysc);
+			xhr.send();
 		}
 		xhr.onreadystatechange=function(){
 			if(xhr.readyState==0 || xhr.readyState==1){
@@ -330,49 +330,49 @@ l.jsonPage={
 			this.setContent(0,this._perPageLength);
 		}
 	},
-    setPage:function(){
-    	if(!this._length){return }
-    	if(this._length>=this._perPageLength){
-    		var max=Math.ceil(this._length / this._perPageLength),tmp=[],next;
-    		max>2 ? next=this._perPageLength*2 : next=this._length;
-    		//tmp.push("<a data_beginRow='"+ 0 +"' data_endRow='"+ this._perPageLength +"'></a>");
-    		for(var i=0;i<max;i++){
-    			var beginRow = i * this._perPageLength,endRow = beginRow + this._perPageLength;
+	setPage:function(){
+		if(!this._length){return }
+		if(this._length>=this._perPageLength){
+			var max=Math.ceil(this._length / this._perPageLength),tmp=[],next;
+			max>2 ? next=this._perPageLength*2 : next=this._length;
+			//tmp.push("<a data_beginRow='"+ 0 +"' data_endRow='"+ this._perPageLength +"'></a>");
+			for(var i=0;i<max;i++){
+				var beginRow = i * this._perPageLength,endRow = beginRow + this._perPageLength;
 				if (endRow > length) {endRow = length;}
-    			if(i==0){
+				if(i==0){
 					tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "' class='NavOn'>"+(i+1)+"</a>");
 				}else{
 					tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "'>"+(i+1)+"</a>");
 				}
-    		}
-    		//tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
-    		tmp.join("");
-    		this._nav.html(tmp);
-    	}else{
-    		this._nav.html("<a class='NavOn'>1</a>");
-    	}
-    },
-    setContent:function(beginRow,endRow){
-    	if(!this._data){return}
-    	var tmp=[];
-    	this._content.html("");
-    	for (beginRow; beginRow < endRow; beginRow++){
+			}
+			//tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
+			tmp.join("");
+			this._nav.html(tmp);
+		}else{
+			this._nav.html("<a class='NavOn'>1</a>");
+		}
+	},
+	setContent:function(beginRow,endRow){
+		if(!this._data){return}
+		var tmp=[];
+		this._content.html("");
+		for (beginRow; beginRow < endRow; beginRow++){
 			tmp.push('<li>' + this._data[beginRow].content +'</li>');
 		}
 		tmp.join("");
 		this._content.html(tmp);
-    },
-    selected:function(o){
-    	var beginRow=o.attr("data_beginRow"),endRow=o.attr("data_endRow"),prev,prev2,next;
-    	beginRow>this._perPageLength ? prev=beginRow-this._perPageLength : prev=0;
-    	this._length>endRow ? prev2=endRow : prev2=beginRow ;
-    	next=endRow+this._perPageLength;
-    	if(next>this._length){next=this._length;}
-    	o.siblings().removeClass("NavOn");o.addClass("NavOn");
-    	this._nav.eq(0).attr({"data_beginRow":prev,"data_endRow":beginRow});
-    	this._nav.last().attr({"data_beginRow":prev2,"data_endRow":next});
-    	this.setContent(beginRow,endRow);
-    }
+	},
+	selected:function(o){
+		var beginRow=o.attr("data_beginRow"),endRow=o.attr("data_endRow"),prev,prev2,next;
+		beginRow>this._perPageLength ? prev=beginRow-this._perPageLength : prev=0;
+		this._length>endRow ? prev2=endRow : prev2=beginRow ;
+		next=endRow+this._perPageLength;
+		if(next>this._length){next=this._length;}
+		o.siblings().removeClass("NavOn");o.addClass("NavOn");
+		this._nav.eq(0).attr({"data_beginRow":prev,"data_endRow":beginRow});
+		this._nav.last().attr({"data_beginRow":prev2,"data_endRow":next});
+		this.setContent(beginRow,endRow);
+	}
 };
 /*
 l.jsonPage.index(data,"10","#nav","#content")
@@ -382,8 +382,8 @@ l.dialog={
 	locker:false,
 	creater:function(){
 		if($("#lDialogBox").length==0){
-		    $("body").append('<div id="lDialogBox"><div class="lDialogBoxTitle"><div id="lDialogBoxTitle"></div><div id="lDialogClose"></div></div><div id="lDialogBoxContent"></div><div id="lDialogBoxBtn"></div></div>');
-	    }
+			$("body").append('<div id="lDialogBox"><div class="lDialogBoxTitle"><div id="lDialogBoxTitle"></div><div id="lDialogClose"></div></div><div id="lDialogBoxContent"></div><div id="lDialogBoxBtn"></div></div>');
+		}
 		$("#lDialogBox").css({
 			"position=absolute",
 			"zIndex=1000",
@@ -487,31 +487,31 @@ String.prototype.trim=function(){
 	return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 String.prototype.replaceAll=function(rgExp, replaceText){
-    var tmpStr = this;
-    while (tmpStr.indexOf(rgExp) != -1){
-        tmpStr = tmpStr.replace(rgExp, replaceText);
-    }
-    return tmpStr;
+	var tmpStr = this;
+	while (tmpStr.indexOf(rgExp) != -1){
+		tmpStr = tmpStr.replace(rgExp, replaceText);
+	}
+	return tmpStr;
 }
 String.prototype.repChinese=function(){
-    var _tmp = this;
-    $(['０', '１', '２', '３', '４', '５', '６', '７', '８', '９']).each(function(i, v) {
-        _tmp = _tmp.replaceAll(v, i);
-    });
-    return _tmp;
+	var _tmp = this;
+	$(['０', '１', '２', '３', '４', '５', '６', '７', '８', '９']).each(function(i, v) {
+		_tmp = _tmp.replaceAll(v, i);
+	});
+	return _tmp;
 }
 String.prototype.isEmail=function(){
-    var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+	var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
 	return myreg.test(this);
 }
 String.prototype.isNumber=function(){
-    return /^[0-9]+$/.test(this);
+	return /^[0-9]+$/.test(this);
 }
 String.prototype.hasChinese=function() {
-    return escape(this).indexOf("%u") != -1;
+	return escape(this).indexOf("%u") != -1;
 }
 String.prototype.isIDCard=function() {
-    return /^(\d{15}|\d{18}|\d{17}(X|x))$/.test(this);
+	return /^(\d{15}|\d{18}|\d{17}(X|x))$/.test(this);
 }
 Array.prototype.isContains=function(o,a){
 	for( var i=0,len=a.length,tf=false;i<len;i++ ){
