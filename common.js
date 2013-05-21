@@ -385,10 +385,10 @@ l.dialog={
 			$("body").append('<div id="lDialogBox"><div class="lDialogBoxTitle"><div id="lDialogBoxTitle"></div><div id="lDialogClose"></div></div><div id="lDialogBoxContent"></div><div id="lDialogBoxBtn"></div></div>');
 		}
 		$("#lDialogBox").css({
-			"position=absolute",
-			"zIndex=1000",
-			"width=",
-			"height="
+			"position":"absolute"
+			,"zIndex":"1000"
+			//,"width":""
+			//,"height":""
 		}).show();
 		l.setPosition($("#lDialogBox"));
 	},
