@@ -496,10 +496,10 @@ l.dialog={
 String.prototype.empty=function(){
 	return this ==null || this=="" || this.length==0;
 }
-String.prototype.encode:function(){
+String.prototype.encode=function(){
 	return encodeURIComponent(this);
 }
-String.prototype.decode:function(){
+String.prototype.decode=function(){
 	return decodeURIComponent(this);
 }
 String.prototype.trim=function(){
