@@ -167,12 +167,11 @@ var l={
 			navigator.geolocation.getCurrentPosition(function(position){
 				var lat = position.coords.latitude;
 				var lon = position.coords.longitude;
-				$.ajax('http://gc.ditu.aliyun.com/regeocoding',{
-					dataType:'jsonp',
-					anysc:false,
-					jsonp:'b',
-					data:{l:lat+','+lon,type:'010'},
+				l.ajax.get({
+					url:"/m/method/regeocoding.php",
+					data:{lat:lat,lon:lon,type:'010'},
 					success:function(data){
+						var data=eval("("+data+")");
 						if(data&&data.addrList&&data.addrList[0].status===1){
 							var admName=data.addrList[0].admName,sheng,shi=data.addrList[0].name;
 							admName=admName.split(",");
@@ -346,21 +345,21 @@ l.jsonPage={
 				}
 			}
 			//tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
-			tmp.join("");
-			this._nav.html(tmp);
+			tmp=tmp.join("");
+			this._nav.innerHTML=tmp;
 		}else{
-			this._nav.html("<a class='NavOn'>1</a>");
+			this._nav.innerHTML="<a class='NavOn'>1</a>";
 		}
 	},
 	setContent:function(beginRow,endRow){
 		if(!this._data){return}
 		var tmp=[];
-		this._content.html("");
+		this._content.innerHTML="";
 		for (beginRow; beginRow < endRow; beginRow++){
 			tmp.push('<li>' + this._data[beginRow].content +'</li>');
 		}
-		tmp.join("");
-		this._content.html(tmp);
+		tmp=tmp.join("");
+		this._content.innerHTML=tmp;
 	},
 	selected:function(o){
 		var beginRow=o.attr("data_beginRow"),endRow=o.attr("data_endRow"),prev,prev2,next;
