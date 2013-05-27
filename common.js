@@ -337,7 +337,7 @@ l.jsonPage={
 			//tmp.push("<a data_beginRow='"+ 0 +"' data_endRow='"+ this._perPageLength +"'></a>");
 			for(var i=0;i<max;i++){
 				var beginRow = i * this._perPageLength,endRow = beginRow + this._perPageLength;
-				if (endRow > length) {endRow = length;}
+				if (endRow > this._length) {endRow = this._length;}
 				if(i==0){
 					tmp.push("<a data_beginRow='" + beginRow + "' data_endRow='" + endRow + "' class='NavOn'>"+(i+1)+"</a>");
 				}else{
@@ -345,21 +345,20 @@ l.jsonPage={
 				}
 			}
 			//tmp.push("<a data_beginRow='"+ this._perPageLength +"' data_endRow='"+ next +"'></a>");
-			tmp=tmp.join("");
-			this._nav.innerHTML=tmp;
+			this._nav.html("");
+			this._nav.html(tmp.join(""));
 		}else{
-			this._nav.innerHTML="<a class='NavOn'>1</a>";
+			this._nav.html("<a class='NavOn'>1</a>");
 		}
 	},
 	setContent:function(beginRow,endRow){
 		if(!this._data){return}
 		var tmp=[];
-		this._content.innerHTML="";
+		this._content.html("");
 		for (beginRow; beginRow < endRow; beginRow++){
 			tmp.push('<li>' + this._data[beginRow].content +'</li>');
 		}
-		tmp=tmp.join("");
-		this._content.innerHTML=tmp;
+		this._content.html(tmp.join(""));
 	},
 	selected:function(o){
 		var beginRow=o.attr("data_beginRow"),endRow=o.attr("data_endRow"),prev,prev2,next;
@@ -374,8 +373,8 @@ l.jsonPage={
 	}
 };
 /*
-l.jsonPage.index(data,"10","#nav","#content")
-$("#nav").live("click",function(){var o=$(this);l.jsonPage.selected(o);})
+l.jsonPage.index(data,"10","#nav","#content");
+$("#nav").live("click",function(){var o=$(this);l.jsonPage.selected(o);});
 */
 l.dialog={
 	locker:false,
@@ -494,9 +493,13 @@ String.prototype.replaceAll=function(rgExp, replaceText){
 }
 String.prototype.repChinese=function(){
 	var _tmp = this;
-	$(['０', '１', '２', '３', '４', '５', '６', '７', '８', '９']).each(function(i, v) {
-		_tmp = _tmp.replaceAll(v, i);
-	});
+	var ChineseNumber=['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'],i=0;
+	for(i<10;i++){
+		if(ChineseNumber[i]==_tmp){
+			_tmp = _tmp.replaceAll(ChineseNumber[i], i);
+			break;
+		}
+	}
 	return _tmp;
 }
 String.prototype.isEmail=function(){
