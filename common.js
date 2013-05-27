@@ -493,11 +493,11 @@ String.prototype.replaceAll=function(rgExp, replaceText){
 }
 String.prototype.repChinese=function(){
 	var _tmp = this;
-	var ChineseNumber=['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'],i=0;
-	for(i<10;i++){
+	var ChineseNumber=['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+	for(var i=0;i<10;i++){
 		if(ChineseNumber[i]==_tmp){
 			_tmp = _tmp.replaceAll(ChineseNumber[i], i);
-			break;
+			//break;
 		}
 	}
 	return _tmp;
