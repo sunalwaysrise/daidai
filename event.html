@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>事件测试</title>
+	<script type="text/javascript" src="common.js"></script>
+</head>
+<body>
+    <a id="test">delEvent</a><br/>
+    <a href="http://www.cp2y.com" id="cp2y">cp2y</a><br/>
+    <div id="out">
+<a id="1" >111</a>  <br/>      
+<a id="2" >222</a> <br/>
+<a id="3" >333</a> <br/>
+<a id="4" >4444</a> <br/>
+    </div>
+    <div id="text"></div>
+<script type="text/javascript">
+var $=function(x){
+    return document.getElementById(x);
+}
+var fn2=function(){
+    console.log(this.innerHTML);
+    l.event.del($("out"),"click");
+}
+l.event.add($("test"),"click",fn2);
+l.event.add($("out"),"click",function(o){
+    var target = l.event.thisElement(o);
+    switch(target.id){
+        case "1":
+        console.log(target.innerHTML,"--11111");
+        break;
+        case "2":
+        console.log(target.innerHTML,"--2222222");
+        break;
+        case "3":
+        console.log(target.innerHTML,"--3333333");
+        break;
+        case "out":
+        console.log(target.innerHTML,"--out");
+        break;
+    }
+});
+l.event.add($("cp2y"),"click",function(o){
+    l.event.preventDefault(o);
+});
+l.event.add($("4"),"click",function(o){
+    var target = l.event.thisElement(o);
+    console.log(target.innerHTML);
+    $("text").innerHTML='<a id="5">22</a>';
+});
+l.event.live($("5"),"click",function(o){
+    if(target.id=="5"){
+        alert(1235667)
+    }
+});
+l.event.add("document","click", function(){alert(3333)});
+</script>
+</body>
+</html>
