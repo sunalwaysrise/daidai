@@ -521,8 +521,50 @@ l.event = {
     }
 };
 
-
-
+l.fall={
+    load:function(op){
+        var content=$("#"+op.content)
+        ,box=content.children("li")
+        ,len=box.length
+        ,_width=op.width?op.width:"230"
+        ,_margin=op.margin?op.margin:"10";
+        content.css({"position":"relative"});
+        var n=n?n:3//一行显示最少的个数，默认为3
+            ,minPerLine=Math.floor((document.documentElement.clientWidth+_margin)/(_width+_margin))//当前一行显示的数量。
+            ,perLines
+            ,minHeight=box.eq(0).offsetHeight;
+        minPerLine>n?perLines=minPerLine:perLines=n;//perLines 为最终一行显示的数量。
+        box.css({"position":"absolute","width":_width});
+        var _lie=Math.ceil(len/perLines),lie=[];
+        for(var i=0;i<_lie;i++){
+           var arr=[];
+            for(var j=0;j<len;j++){
+                if( j>=perLines*i && j<perLines*(i+1) ){
+                    arr.push(box.eq(j));
+                }
+            }
+            lie[i]=arr;
+        }
+        //console.log(lie);//将所有的box放入一行为一组的二维数组；
+        var HeightList=[],x=0,xlen=lie.length;
+        for(x;x<xlen;x++){
+            var y=0,ylen=lie[x].length;
+            if(x==0){
+                for(y;y<ylen;y++){
+                    var _left=(Number(_width)+Number(_margin))*y;
+                    lie[x][y].css({"top":"0","left":_left});
+                    HeightList.push(lie[x][y].height());
+                }
+            }else{
+                for(y;y<ylen;y++){
+                    var _left=(Number(_width)+Number(_margin))*y,top,HL=HeightList.length;
+                    lie[x][y].css({"top":HeightList[HL-perLines]+Number(_margin),"left":_left});
+                    HeightList.push(lie[x][y].height()+HeightList[HL-perLines]+Number(_margin));
+                }
+            }
+        }
+    }
+}
 //以下是对原生对象的基本扩展
 String.prototype.empty=function(){
   return this ==null || this=="" || this.length==0;
@@ -544,9 +586,8 @@ String.prototype.replaceAll=function(rgExp, replaceText){
   return tmpStr;
 }
 String.prototype.repChinese=function(){
-  var _tmp = this;
-  var ChineseNumber=['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
-  for(var i=0;i<10;i++){
+  var _tmp = this,ChineseNumber=['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'],i=0;
+  for(i;i<10;i++){
     if(ChineseNumber[i]==_tmp){
       _tmp = _tmp.replaceAll(ChineseNumber[i], i);
       //break;
@@ -567,8 +608,9 @@ String.prototype.hasChinese=function() {
 String.prototype.isIDCard=function() {
   return /^(\d{15}|\d{18}|\d{17}(X|x))$/.test(this);
 }
-Array.prototype.isContains=function(o,a){
-  for( var i=0,len=a.length,tf=false;i<len;i++ ){
+Array.prototype.inArray=function(o,a){
+  var i=0,len=a.length,tf=false;
+  for(i;i<len;i++){
     if(a[i]==o){
       tf = true;
       break;
