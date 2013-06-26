@@ -434,19 +434,19 @@ l.dialog={
     this.selected(event,event2);
   },
   selected:function(o,o2){
-    $("#lDialogTrue").live('click',function(){
+    $("#lDialogTrue").click(function(){
       if(typeof(o)=="function"){
         o();
       }
       l.dialog.close();
     });
-    $("#lDialogFalse").live('click',function(){
+    $("#lDialogFalse").click(function(){
       if(typeof(o2)=="function"){
         o2();
       }
       l.dialog.close();
     });
-    $("#lDialogClose").live('click',function(){
+    $("#lDialogClose").click(function(){
       l.dialog.close();
     });
   },
@@ -564,7 +564,7 @@ l.fall={
             }
         }
     }
-}
+};
 //以下是对原生对象的基本扩展
 String.prototype.empty=function(){
   return this ==null || this=="" || this.length==0;
