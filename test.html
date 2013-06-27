@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    <style type="text/css">
+        #content{margin-top:10px;height:1200px}
+        li{list-style: none;border:1px #ddd solid;overflow:hidden;height:200px}
+        *{margin:0}
+    </style>
+</head>
+<body>
+<ul id="content">
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://img4.cache.netease.com/auto/2013/6/27/2013062707472599c51.jpg" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://www.cp2y.com/resource/images/tmp/34_1371784348463.png" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://www.cp2y.com/resource/images/tmp/56_1371784327018.png" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://www.cp2y.com/resource/images/tmp/61_1371784302367.png" data_load="false"/></li>
+    <li><img class="lLazyLoad" src="" data_src="http://www.cp2y.com/resource/images/tmp/34_1371784348463.png" data_load="false"/></li>
+</ul>
+<script type="text/javascript">
+    l.fall.load({content:"content",width:218,margin:20});
+    $(window).resize(function(){
+        l.throttle(l.fall.load({content:"content",width:218,margin:20}), 50, 100);
+    });
+    $(window).bind("scroll", function() {
+        if ($(document).scrollTop() + $(window).height() > $(document).height() - 20) {
+            l.fall.load({content:"content",width:218,margin:20});
+        }
+    });
+    var arr1=[2,4,6,1,7,8,9,0];
+    arr1.sort()
+    //console.log(arr1)
+    l.lazyLoad.load("lLazyLoad",10);
+</script>
+</body>
+</html>

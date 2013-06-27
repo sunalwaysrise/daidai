@@ -520,7 +520,7 @@ l.event = {
         }
     }
 };
-
+//瀑布流
 l.fall={
     load:function(op){
         var content=$("#"+op.content)
@@ -529,7 +529,7 @@ l.fall={
         ,_width=op.width?op.width:"230"
         ,_margin=op.margin?op.margin:"10";
         content.css({"position":"relative"});
-        var n=n?n:3//一行显示最少的个数，默认为3
+        var n=n?n:3
             ,minPerLine=Math.floor((document.documentElement.clientWidth+_margin)/(_width+_margin))//当前一行显示的数量。
             ,perLines
             ,minHeight=box.eq(0).offsetHeight;
@@ -545,7 +545,6 @@ l.fall={
             }
             lie[i]=arr;
         }
-        //console.log(lie);//将所有的box放入一行为一组的二维数组；
         var HeightList=[],x=0,xlen=lie.length;
         for(x;x<xlen;x++){
             var y=0,ylen=lie[x].length;
@@ -564,6 +563,29 @@ l.fall={
             }
         }
     }
+};
+//懒加载
+l.lazyLoad={
+  objs:[],
+  load:function(name,n){
+  var List=$("."+name),i=0,len=List.length;
+    this.objs=[];
+    for(i;i<len;i++){
+      if(!List.eq(i).attr("src")){
+        this.objs.push(List.eq(i));
+      }
+    }
+    var _objsLength=this.objs.length,_i=0;
+    if(_objsLength==0){return false}
+    var wHeight=$(window).height(),sHeight=$(document).scrollTop();
+    for(_i;_i<_objsLength;_i++){
+      var eTop=this.objs[_i].offset().top;
+      if(eTop<(wHeight+sHeight)+n){
+          this.objs[_i].attr({"src":this.objs[_i].attr("data_src")});
+      }
+    }
+    $(window).scroll(function(){l.throttle(l.lazyLoad.load(name,10), 50, 1000);});
+  }
 };
 //以下是对原生对象的基本扩展
 String.prototype.empty=function(){
