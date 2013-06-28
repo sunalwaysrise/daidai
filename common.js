@@ -476,7 +476,7 @@ l.dialog={
 //l.dialog.confirm({title:"title",content:"content",lock:"lock",btn1:"OK",btn2:"CANCEL",event:fn});
 l.event = {
     live:function(element, type, fn){
-        this.add("body",type, fn);
+        this.add(document.body,type, fn);
     },
     add: function(element, type, fn){
         if (element.addEventListener){
