@@ -42,7 +42,7 @@ var l={
   tabs:function(config){
     var lTabNav=config.nav,lContent=config.content,lActive=config.active;
     var T=$("#"+lTabNav),C=$("#"+lContent);
-    T.children("li").eq(0).addClass();
+    T.children("li").eq(0).addClass(lActive);
     C.children("li").eq(0).show();
     T.children("li").click(function(){
       var _this=$(this),_index=_this.index();
@@ -50,7 +50,7 @@ var l={
       _this.addClass(lActive);
       C.children("li").hide();
       C.children("li").eq(_index).show();
-    })
+    });
   },
   ajax:{},
   jsonPage:{},
@@ -476,7 +476,7 @@ l.dialog={
 //l.dialog.confirm({title:"title",content:"content",lock:"lock",btn1:"OK",btn2:"CANCEL",event:fn});
 l.event = {
     live:function(element, type, fn){
-        l.event.add("body",type, fn);
+        this.add("body",type, fn);
     },
     add: function(element, type, fn){
         if (element.addEventListener){
@@ -630,13 +630,58 @@ String.prototype.hasChinese=function() {
 String.prototype.isIDCard=function() {
   return /^(\d{15}|\d{18}|\d{17}(X|x))$/.test(this);
 }
-Array.prototype.inArray=function(o,a){
-  var i=0,len=a.length,tf=false;
+Array.prototype.inArray=function(o){
+  var i=0,len=this.length,tf=false;
   for(i;i<len;i++){
-    if(a[i]==o){
+    if(this[i]==o){
       tf = true;
       break;
     }
   }
   return tf;
 }
+Array.prototype.max=function(){
+  var max,i=0,len=this.length;
+  for(i;i<len;i++){
+     max = i==0?Number(this[i]):(Number(this[i])>max?Number(this[i]):max);
+  }
+  return max;
+}
+Array.prototype.min=function(){
+  var min,i=0,len=this.length;
+  for(i;i<len;i++){
+     min = i==0?Number(this[i]):(Number(this[i])<min?Number(this[i]):min);
+  }
+  return min;
+}
+Array.prototype.clone=function(){
+  var a=[],i=0;len=this.length;
+  for(i;i<len;i++){
+    a[i] = this[i];
+  };
+  return a;
+}
+Array.prototype.delRepeat=function(){
+  var str = [],i=0,len=this.length;
+  for(i;i < len;i++){
+    ! RegExp(this[i],"g").test(str.join(",")) && (str.push(this[i]));
+  }
+  return str;
+}
+Array.prototype.random=function() {
+  var tmpArr=[],num=this.length,arr=[],x = 0, y=0, z = 0;
+  for (x ; x < num; x++) {
+    tmpArr[x] = x;
+  }
+  for (y ; y < num; y++) {
+    var iRand = parseInt(num * Math.random()), temp = tmpArr[y];
+    tmpArr[y] = tmpArr[iRand];
+    tmpArr[iRand] = temp;
+  }
+  for(z;z<num;z++){
+    arr.push(this[tmpArr[z]]);
+  }
+  return arr;
+}
+
+ 
