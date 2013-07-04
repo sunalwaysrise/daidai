@@ -587,6 +587,40 @@ l.lazyLoad={
     $(window).scroll(function(){l.throttle(l.lazyLoad.load(name,10), 50, 1000);});
   }
 };
+//DOM操作
+l.select=function(d){
+  if(d.substr(0,1)=="#"){
+    return Sizzle.matches(d)[0];
+  }
+  if(d.substr(0,1)=="."){
+    return Sizzle.matches(d);
+  }
+  return Sizzle.matches(d);
+};
+l.addClass=function(d,c){
+    var _dom=l.select(d),i=0,len=_dom.length;
+    for(i;i<len;i++){
+      var _class=_dom[i].getAttribute("class"),_classArray;
+      typeof(_class)=="object"?_class=_dom[i].getAttribute("className"):"";
+      _class.empty()?_classArray=[]:_classArray=_class.split(" ");
+      if(!_classArray.inArray(c)){
+        _classArray.push(c);
+        _dom[i].className=_classArray.join(" ");
+      }
+    }
+};
+l.removeClass=function(d,c){
+    var _dom=l.select(d),i=0,len=_dom.length;
+    for(i;i<len;i++){
+      var _class=_dom[i].getAttribute("class"),_classArray;
+      typeof(_class)=="object"?_class=_dom[i].getAttribute("className"):"";
+      _class.empty()?_classArray=[]:_classArray=_class.split(" ");
+      if(_classArray.inArray(c)){
+        var nClassArray=_classArray.del(c);
+        _dom[i].className=nClassArray.join(" ");
+      }
+    }
+};
 //以下是对原生对象的基本扩展
 String.prototype.empty=function(){
   return this ==null || this=="" || this.length==0;
@@ -693,6 +727,24 @@ Array.prototype.inArray=function(o){
     }
   }
   return tf;
+}
+Array.prototype.del=function(o){
+  if(this.inArray(o)){
+    var i=0;len=this.length,_pos=[],a=[],j=0;
+    for(i;i<len;i++){
+      if(this[i]==o){
+        _pos.push(i);
+      }
+    }
+    for(j;j<len;j++){
+      if(!_pos.inArray(j)){
+        a.push(this[j]);
+      }
+    }
+    return a;
+  }else{
+    return this;
+  }
 }
 Array.prototype.max=function(){
   var max,i=0,len=this.length;
