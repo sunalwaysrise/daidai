@@ -1,6 +1,19 @@
 /*
 author: luwenbin@live.com
 */
+$.extend($.browser,{
+  screen : function(){
+    var s = $.browser.msie ?
+      {w:document.documentElement.clientWidth,h:document.documentElement.clientHeight} : ($.browser.opera ?
+      {w:Math.min(window.innerWidth, document.body.clientWidth),h:Math.min(window.innerHeight, document.body.clientHeight)} :
+      {w:Math.min(window.innerWidth, document.documentElement.clientWidth),h:Math.min(window.innerHeight, document.documentElement.clientHeight)});
+    s.left = document.documentElement.scrollLeft || document.body.scrollLeft;
+    s.top = document.documentElement.scrollTop || document.body.scrollTop;
+    s.sw = document.documentElement.scrollWidth || document.body.scrollWidth;
+    s.sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+    return s;
+  }
+});
 var l={
   getArgs:function(argName){
     if(!argName){return}
@@ -455,6 +468,51 @@ l.dialog={
     $("#lDialogBox,#lDialogLock").hide();
     $("#lDialogBoxTitle,#lDialogBoxContent,#lDialogBoxBtn").html("");
   },
+  draggable:function(obj,dragObj) {
+    dragObj = dragObj || obj;
+    var obj = $(obj);
+    var dragObj = $(dragObj);
+    if (!dragObj) {
+      return;
+    }
+    obj.css('cursor', 'move');
+    var pos, h = this, o = $(document);
+    var oh = dragObj.outerHeight();
+    var ow = dragObj.outerWidth();
+    obj.mousedown(function(event) {
+      if (h.setCapture){
+        h.setCapture();
+      }
+      pos = {top : dragObj.position().top,left : dragObj.position().left};
+      pos = {top : event.clientY - pos.top,left : event.clientX - pos.left};
+      o.mousemove(function(event) {
+        try {
+          if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+          } else {
+            document.selection.empty();
+          }
+        } catch(e) {
+        }
+        var s = $.browser.screen();
+        var maxTop = s.sh;
+        var maxLeft = s.sw;
+        var top = Math.max(event.clientY - pos.top, 0);
+        var left = Math.max(event.clientX - pos.left, 0);
+        dragObj.css({
+          top : Math.min(top, maxTop - oh),
+          left : Math.min(left, maxLeft - ow)
+        });
+      });
+      o.mouseup(function(event) {
+        if (h.releaseCapture){
+          h.releaseCapture();
+        }
+        o.unbind('mousemove');
+        o.unbind('mouseup');
+      });
+    });
+  },
   lock:function(){
     if($("#lDialogLock").length==0){
       $("body").append('<div id="lDialogLock"></div>');
@@ -588,17 +646,22 @@ l.lazyLoad={
   }
 };
 //DOM操作
-l.select=function(d){
-  if(d.substr(0,1)=="#"){
-    return Sizzle.matches(d)[0];
+l.dom={
+  ID:function(o){
+    return document.getElementById(o);
+  },
+  CLASS=function(o){
+    return document.getElementsByClassName(o);
+  },
+  NAME=function(o){
+    return getElementsByName(o);
+  },
+  TAG=function(o){
+    return getElementsByTagName(o);
   }
-  if(d.substr(0,1)=="."){
-    return Sizzle.matches(d);
-  }
-  return Sizzle.matches(d);
 };
 l.addClass=function(d,c){
-    var _dom=l.select(d),i=0,len=_dom.length;
+    var _dom=d,i=0,len=_dom.length;
     for(i;i<len;i++){
       var _class=_dom[i].getAttribute("class"),_classArray;
       typeof(_class)=="object"?_class=_dom[i].getAttribute("className"):"";
@@ -610,7 +673,7 @@ l.addClass=function(d,c){
     }
 };
 l.removeClass=function(d,c){
-    var _dom=l.select(d),i=0,len=_dom.length;
+    var _dom=d,i=0,len=_dom.length;
     for(i;i<len;i++){
       var _class=_dom[i].getAttribute("class"),_classArray;
       typeof(_class)=="object"?_class=_dom[i].getAttribute("className"):"";
@@ -690,8 +753,7 @@ String.prototype.isID=function(){
         ereg=/^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}[0-9Xx]$/;//闰年出生日期的合
       else
         ereg=/^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}[0-9Xx]$/;//平年出生日期的合法性正则表达式
-      if(ereg.test(idcard))
-      {
+      if(ereg.test(idcard)){
         S=(parseInt(idcard_array[0]) + parseInt(idcard_array[10])) * 7 
         + (parseInt(idcard_array[1]) + parseInt(idcard_array[11])) * 9 
         + (parseInt(idcard_array[2]) + parseInt(idcard_array[12])) * 10 
