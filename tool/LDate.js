@@ -3,7 +3,7 @@ var LDate={
 	init:function(o){
 		this.O=o;
 		if($("#dateBox").length==0){
-			$("body").append('<div id="dateBox"><select id="yearList"></select><select id="monthList"></select><div id="dayList"></div></div>');
+			$("body").append('<div id="dateBox"><select id="yearList"></select><select id="monthList"></select><div id="xqList"><a>日</a><a>一</a><a>二</a><a>三</a><a>四</a><a>五</a><a>六</a></div><div id="dayList"></div></div>');
 		}
 		var m=12,_y=[],_m=[],i=1970,l=1,d=new Date(),dateBox=$("#dateBox");
 		this.Y=d.getFullYear();
@@ -34,7 +34,10 @@ var LDate={
 		this.day();
 	},
 	day:function(d){
-		var m=$("#monthList").val(),y=$("#yearList").val(),ds,i=1,_d=[],d;
+		var m=$("#monthList").val(),y=$("#yearList").val(),ds,i=1,_d=[],d,xq=new Date(y,(m-1),01),xqq=xq.getDay(),xqqi=0;
+		for(xqqi;xqqi<xqq;xqqi++){
+			_d.push('<a></a>');
+		}
 		if(m=="01"||m=="03"||m=="05"||m=="07"||m=="08"||m=="10"||m=="12"){
 			ds=31;
 		}else if(m=="04"||m=="06"||m=="09"||m=="11"){
